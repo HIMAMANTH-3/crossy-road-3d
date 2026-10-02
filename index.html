@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%234caf50'/><text y='70' font-size='60' x='20'>🐔</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Crossy Road 3D - Endless Arcade Voxel Hopper</title>
+    <meta name="description" content="A polished, fast-paced 3D endless arcade road crossing game. Hop through traffic, rivers, rails, avoid vehicles and beat your high score!" />
+
+    <!-- Google Fonts for arcade typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Lilita+One&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- 3D Canvas Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- Gameplay In-Game HUD -->
+    <div id="hud-overlay" class="hud-layer">
+      <!-- Top Left: Stats -->
+      <div class="hud-left">
+        <div class="hud-pill best-pill">
+          <span class="pill-icon">🏆</span>
+          <span id="hud-best" class="pill-text">BEST: 0</span>
+        </div>
+        <div class="hud-pill coins-pill">
+          <span class="pill-icon">🪙</span>
+          <span id="hud-coins" class="pill-text">0</span>
+        </div>
+      </div>
+
+      <!-- Top Center: Massive Score Counter -->
+      <div class="hud-center">
+        <div id="hud-score" class="score-counter">0</div>
+      </div>
+
+      <!-- Top Right: Action Controls -->
+      <div class="hud-right">
+        <button id="btn-mute" class="hud-btn" aria-label="Toggle Sound" title="Toggle Sound">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        </button>
+        <button id="btn-pause" class="hud-btn" aria-label="Pause Game" title="Pause Game">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Start Overlay -->
+    <div id="start-overlay" class="fullscreen-overlay start-screen">
+      <div class="start-card">
+        <div class="logo-badge">🐔 3D VOXEL ARCADE</div>
+        <h1 class="game-title">CROSSY ROAD</h1>
+        <p class="game-tagline">Hop endlessly. Dodge traffic. Cross rivers.</p>
+
+        <div class="start-prompt-btn">
+          <span class="pulse-ring"></span>
+          TAP OR PRESS ANY KEY TO HOP
+        </div>
+
+        <div class="controls-guide">
+          <div class="control-item">
+            <div class="keys-row">
+              <span class="kbd">W</span> / <span class="kbd">↑</span>
+            </div>
+            <span class="label">Hop Forward</span>
+          </div>
+          <div class="control-item">
+            <div class="keys-row">
+              <span class="kbd">A</span> <span class="kbd">S</span> <span class="kbd">D</span> / <span class="kbd">←</span> <span class="kbd">↓</span> <span class="kbd">→</span>
+            </div>
+            <span class="label">Steer / Back</span>
+          </div>
+          <div class="control-item">
+            <div class="keys-row">
+              <span class="mouse-icon">👆</span>
+            </div>
+            <span class="label">Swipe or Tap</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pause Overlay -->
+    <div id="pause-overlay" class="fullscreen-overlay pause-screen hidden">
+      <div class="modal-card">
+        <h2 class="modal-title">GAME PAUSED</h2>
+        <p class="modal-subtitle">Take a breather!</p>
+        <button id="btn-resume" class="arcade-btn primary-btn">RESUME GAME</button>
+      </div>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div id="gameover-overlay" class="fullscreen-overlay gameover-screen hidden">
+      <div class="modal-card gameover-card">
+        <div id="new-best-badge" class="badge-new-best hidden">✨ NEW HIGH SCORE! ✨</div>
+        <h2 class="gameover-title">GAME OVER</h2>
+
+        <div class="score-summary-box">
+          <div class="summary-item primary-score">
+            <span class="summary-label">FINAL SCORE</span>
+            <span id="final-score" class="summary-val big-val">0</span>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">BEST SCORE</span>
+              <span id="final-best" class="summary-val">0</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">DISTANCE</span>
+              <span id="final-distance" class="summary-val">0m</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">COINS</span>
+              <span id="final-coins" class="summary-val">🪙 0</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="play-again-btn" class="arcade-btn primary-btn bounce-btn">
+          PLAY AGAIN
+        </button>
+        <span class="quick-restart-hint">Press <strong>SPACE</strong> or Tap to restart</span>
+      </div>
+    </div>
+
+    <!-- Mobile Virtual Touch D-Pad Overlay -->
+    <div id="mobile-controls" class="mobile-dpad">
+      <button id="btn-up" class="dpad-btn dpad-up" aria-label="Forward">▲</button>
+      <div class="dpad-row">
+        <button id="btn-left" class="dpad-btn dpad-left" aria-label="Left">◀</button>
+        <button id="btn-down" class="dpad-btn dpad-down" aria-label="Backward">▼</button>
+        <button id="btn-right" class="dpad-btn dpad-right" aria-label="Right">▶</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
