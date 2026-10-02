@@ -5,6 +5,8 @@ A vibrant, polished 3D endless arcade game inspired by Crossy Road, built with T
 ![Crossy Road 3D Banner](public/vite.svg)
 
 ## 🎮 Play Online
+👉 **[Play Live Demo Here](https://himamanth-3.github.io/crossy-road-3d/)**
+
 - **Controls**:
   - `W` / `↑` : Hop Forward
   - `S` / `↓` : Hop Backward
